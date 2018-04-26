@@ -1,5 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
+import openpyxl
+import pandas as pd
+import os
+
 
 TP = '977abb69-413a-4ccf-a109-0272c24fd490'
 KH= 'f2519629-5973-4d08-913b-479cce78a356'
