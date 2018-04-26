@@ -1,0 +1,16 @@
+import requests
+from bs4 import BeautifulSoup
+
+TP = '977abb69-413a-4ccf-a109-0272c24fd490'
+KH= 'f2519629-5973-4d08-913b-479cce78a356'
+
+payload = {
+    'StartStation': TP ,
+    'EndStation': KH ,
+    'SearchDate': '2018/04/30',
+    'SearchTime': '08:00',
+    'SearchWay': 'DepartureInEnglish'
+}
+
+res = requests.post("https://www.thsrc.com.tw/tw/TimeTable/SearchResult",data=payload)
+soup = BeautifulSoup(res.text,'lxml')
