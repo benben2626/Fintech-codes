@@ -1,0 +1,99 @@
+import openpyxl
+import pandas as pd
+import os
+
+from IPython.display import display
+
+def print_full(x):
+    df=pd.DataFrame(x)
+    pd.set_option('display.max_rows',1000)
+    pd.set_option('display.max_columns',None)
+    display(df
+
+def importexcel(excelname,sheetname):
+    wb=openpyxl.load_workbook(str(excelname)+".xlsx")
+    ws=wb.get_sheet_by_name(str(sheetname))
+    dataset=[]
+    hold=0
+    cost=0
+    benefit=0
+    total=1
+    sale=0
+    for i in range(0,ws.max_row):
+        up=0
+        down=0
+        RSI=0
+        row=[]
+        a=ws[i+1][1].value
+        if(a==None):
+            break
+        if i==0:
+            row.append("date")
+            row.append("price")
+            row.append("5day-up")
+            row.append("5day-down")
+            row.append("RSI")
+            row.append("buy")
+            row.append("hold")
+            row.append("sale")
+            row.append("share")
+            row.append("capital")
+            row.append("Benefit")
+            row.append("unit")
+            row.append("total")
+        if i>0:
+            for j in range(0,ws.max_column):
+                row.append(ws[i][j].value)
+        if i>=6:
+            for k in range(i-4,i+1):
+                if ws[k][1].value>ws[k-1][1].value:
+                    up=up+ws[k][1].value
+                if ws[k][1].value<ws[k-1][1].value:
+                    down=down+ws[k][1].value
+            up=up/5
+            down=down/5
+            row.append(up)
+            row.append(down)
+            RSI=(up/(up+down))*100
+            row.append(RSI)
+            if RSI<30 and hold!=1:
+                share=10000/ws[i][1].value
+                cost=ws[i][1].value
+                row.append("1")
+                hold=1
+            else:
+                row.append("0")
+            if 70>RSI and hold==1:
+                    row.append("1")
+            else:
+                row.append("0")
+            if RSI>70 and hold==1:
+                row.append("1")
+                hold=0
+                sale=1
+            else:
+                row.append("0")
+            if hold==1 or sale==1:
+                capital=share*ws[i][1].value
+                row.append(share)
+                row.append(capital)
+                profit=(capital-10000)/10000
+                row.append(profit)
+            if sale==1:
+                unit=1+profit
+                row.append(unit)
+                sale=0
+                total=total*unit
+                row.append(total)
+                
+        dataset.append(row)
+    return dataset
+
+excelname="fund"
+sheetname="test2"
+#欄一:時間 欄二:股價
+#定義資料夾
+
+ans=importexcel(excelname,sheetname)
+
+print_full(ans)
