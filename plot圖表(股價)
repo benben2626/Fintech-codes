@@ -1,0 +1,48 @@
+import openpyxl
+import pandas as pd
+import os
+
+from IPython.display import display
+import matplotlib.pyplot as plt
+
+def plotData(plt,data):
+    x=[p[0] for p in data]
+    y=[p[1] for p in data]
+    plt.plot(x,y,)
+
+excelname="大盤"#execel檔名稱
+
+
+Code = input("請輸入股票代號")
+print(Code+"台積電")
+sheetname1=Code#工作表名稱
+
+
+
+
+#目前要自己彙整excel檔在電腦裡
+de=openpyxl.load_workbook(str(excelname)+'.xlsx')
+ds1=de.get_sheet_by_name(str(sheetname1))
+
+
+pplot=[]
+pplotI=[]
+for i in range(2,ds1.max_row):
+    bar=(i-1,ds1[i][3].value)
+    pplot.append(bar)
+
+plotData(plt,pplot)
+plt.show()
+
+select = input("是否提供大盤圖表 [Y/N]")
+if select == 'Y' or 'y':
+    sheetname2="加權"
+
+    ds2=de.get_sheet_by_name(str(sheetname2))
+
+    for i in range(2,ds2.max_row):
+        bar=(i-1,ds2[i][3].value)
+        pplotI.append(bar)
+
+    plotData(plt,pplotI)
+    plt.show()
