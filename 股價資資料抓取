@@ -11,29 +11,23 @@ res.encoding = 'big5'
 content = res.text
 soup = BeautifulSoup(content,'lxml')
 
-for i in range(0,len(soup.findAll("td",{"class","column1"}))+2): 
+current=[]
+row=[]
+for k in soup.findAll("th",{"bgcolor":"#f0f0f0"}):
+    row.append(k.get_text())
+current.append(row)
+for i in soup.findAll("tr",{"class":"stockalllistbg1"}):
     row=[]
-    if i==0:
-        row.append(soup.findAll("strong",{"class","front"})[0].get_text())
-        row.append("到")
-        row.append(soup.findAll("strong")[1].get_text())
-        row.append(soup.findAll("h4")[1].get_text())
-        row.append(soup.findAll("p")[1].get_text())
-    if i==1:
-        row.append(soup.findAll("th",{"class","column1"})[i-1].get_text())
-        row.append(soup.findAll("th",{"class","column3"})[i-1].get_text())
-        row.append(soup.findAll("th",{"class","column4"})[i-1].get_text())
-        row.append(soup.findAll("th",{"class","column2"})[i-1].get_text())
-        row.append(soup.findAll("th",{"class","Width1"})[i-1].get_text())   
-    if i>=2:
-        row.append(soup.findAll("td",{"class","column1"})[i-2].get_text())
-        row.append(soup.findAll("td",{"class","column3"})[i-2].get_text())
-        row.append(soup.findAll("td",{"class","column4"})[i-2].get_text())
-        row.append(soup.findAll("td",{"class","column2"})[i-2].get_text())
-        row.append(soup.findAll("td",{"class","Width1"})[i-2].get_text())
-    timeschedule.append(row)
-print_full(timeschedule)
-
+    for j in i.findAll("td"):
+        row.append(j.get_text())
+    current.append(row)
+for i in soup.findAll("tr",{"class":"stockalllistbg2"}):
+    row=[]
+    for j in i.findAll("td"):
+        row.append(j.get_text())
+    current.append(row)
+    
 current.sort(key=lambda row:row[0],reverse=True)
 print(soup.find("td",{"colspan":"6"}).get_text())
 print(pd.DataFrame(current))
+
