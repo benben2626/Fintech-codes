@@ -3,12 +3,6 @@ from bs4 import BeautifulSoup
 import pandas as pd
 from IPython.display import display
 
-def print_full(x):
-    df=pd.DataFrame(x)
-    pd.set_option('display.max_rows',1000)
-    pd.set_option('display.max_columns',None)
-    display(df)
-    
 stockid=input("請輸入股票代號:")
 
 
@@ -17,22 +11,29 @@ res.encoding = 'big5'
 content = res.text
 soup = BeautifulSoup(content,'lxml')
 
-current=[]
-row=[]
-for k in soup.findAll("th",{"bgcolor":"#f0f0f0"}):
-    row.append(k.get_text())
-current.append(row)
-for i in soup.findAll("tr",{"class":"stockalllistbg1"}):
+for i in range(0,len(soup.findAll("td",{"class","column1"}))+2): 
     row=[]
-    for j in i.findAll("td"):
-        row.append(j.get_text())
-    current.append(row)
-for i in soup.findAll("tr",{"class":"stockalllistbg2"}):
-    row=[]
-    for j in i.findAll("td"):
-        row.append(j.get_text())
-    current.append(row)
-    
+    if i==0:
+        row.append(soup.findAll("strong",{"class","front"})[0].get_text())
+        row.append("到")
+        row.append(soup.findAll("strong")[1].get_text())
+        row.append(soup.findAll("h4")[1].get_text())
+        row.append(soup.findAll("p")[1].get_text())
+    if i==1:
+        row.append(soup.findAll("th",{"class","column1"})[i-1].get_text())
+        row.append(soup.findAll("th",{"class","column3"})[i-1].get_text())
+        row.append(soup.findAll("th",{"class","column4"})[i-1].get_text())
+        row.append(soup.findAll("th",{"class","column2"})[i-1].get_text())
+        row.append(soup.findAll("th",{"class","Width1"})[i-1].get_text())   
+    if i>=2:
+        row.append(soup.findAll("td",{"class","column1"})[i-2].get_text())
+        row.append(soup.findAll("td",{"class","column3"})[i-2].get_text())
+        row.append(soup.findAll("td",{"class","column4"})[i-2].get_text())
+        row.append(soup.findAll("td",{"class","column2"})[i-2].get_text())
+        row.append(soup.findAll("td",{"class","Width1"})[i-2].get_text())
+    timeschedule.append(row)
+print_full(timeschedule)
+
 current.sort(key=lambda row:row[0],reverse=True)
 print(soup.find("td",{"colspan":"6"}).get_text())
-print_full(current)
+print(pd.DataFrame(current))
