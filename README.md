@@ -1,16 +1,12 @@
-# KennethWYLee.github.io
+# Here are some python code of me 
 # 投資相關程式及資料的整理
 
-除了自己寫的程式之外，程式主要的來源如下(在 .ipynb 裡面有標明)：
+資料分析腳本
+*爬蟲
+*圖表
+*策略分析
 
-* [FinLab](https://www.finlab.tw/)
-* [twstock](https://github.com/mlouielu/twstock)
-
-因為我比較習慣使用 pandas 來做分析，所以會盡量把抓到的資料轉換成 dataframe。
-
-底下是一些可以抓資料的網站... 
-
-另外一些在 hackpad 上的已經遺失，需要重新尋找... :p
+資料通常以 dataframe 架構呈現
 
 ## 政府開放資料平台相關連結
 
