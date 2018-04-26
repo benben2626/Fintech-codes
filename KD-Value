@@ -1,0 +1,69 @@
+import openpyxl
+import pandas as pd
+import os
+
+from IPython.display import display
+
+#輸出定義
+def print_full(x):
+    df=pd.DataFrame(x)
+    pd.set_option('display.max_rows',1000)
+    pd.set_option('display.max_columns',None)
+    display(df)
+    
+#資料運算
+def importexcel(excelname,sheetname):
+    wb=openpyxl.load_workbook(str(excelname)+".xlsx")
+    ws=wb.get_sheet_by_name(str(sheetname))
+    dataset=[]
+    b=0
+    c=0
+    KV=84.74
+    DV=81.12
+    for i in range(0,ws.max_row):
+        row=[]
+        a=ws[i+1][1].value
+        if(a==None):
+            break
+        for j in range(0,ws.max_column):
+            row.append(ws[i+1][j].value)
+        if i==0:
+            row.append("9DHigh")
+            row.append("9DLow")
+            row.append("RSV")
+            row.append("Kvalue")
+            row.append("Dvalue")
+            row.append("Cross")
+        if i>=9:
+            b=ws[i-7][3].value
+            c=0
+            for k in range(i-7,i+2):
+                if ws[k][2].value>c:
+                    c=ws[k][2].value
+                if ws[k][3].value<b:
+                    b=ws[k][3].value
+            row.append(c)
+            row.append(b)
+            RSV=(ws[i+1][4].value-b)/(c-b)*100
+            row.append(RSV)
+            KP=KV
+            DP=DV
+            KV=(KV*2/3)+(RSV*1/3)
+            row.append(KV)
+            DV=(DV*2/3)+(KV*1/3)
+            row.append(DV)
+            if KP<DP and KV>DV:
+                row.append("GGGGGG")
+            if KP>DP and KV<DV:
+                row.append("DDDDDD")
+        
+        dataset.append(row)
+    return dataset
+
+excelname="2017stockprice"
+sheetname="all"
+#定義資料夾
+
+ans=importexcel(excelname,sheetname)
+
+print_full(ans)
