@@ -1,0 +1,37 @@
+import requests
+from bs4 import BeautifulSoup
+import json
+import os
+import openpyxl
+import time
+import pandas as pd
+from IPython.display import display
+#資料來源-台灣證劵交易所
+stockid="1101"
+url = "http://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=20180426&stockNo="+stockid+"&_=1524705545902"
+res=requests.get(url)
+content=res.text
+data = json.loads(content)
+#data.keys()全部標籤
+#data['fields']標籤
+data['data'][len(data['data'])-1]
+
+report=[] 
+report.append(data["fields"])#標頭
+for i in range(2017,2018):
+    for m in range(1,13):
+        if(len(str(m))==1):
+            m="0"+str(m)
+        stockdata = str(i)+str(m)+"01"
+        print (stockdata)
+        time.sleep(3)#延遲時間避免被封
+        url="http://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date="+stockdata+"&stockNo="+stockid+"&_=1524705545902"
+        res=requests.get(url)
+        content=res.text
+        data = json.loads(content)
+        for line in range(0,len(data["data"])):
+            row = []
+            for k in range(0,9):
+                row.append(data["data"][line][k])
+            report.append(row)
+print(pd.DataFrame(report))#架構
