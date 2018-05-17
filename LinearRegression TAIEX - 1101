@@ -1,0 +1,28 @@
+import openpyxl
+from openpyxl import load_workbook
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+
+wb = load_workbook('stock.xlsx')
+wi = wb['index']
+w1 = wb['1101']
+
+wid = []
+w1d = []
+for i in range(0,wi.max_row):
+    a=wi[i+1][1].value
+    if(a==None):
+        break
+    if i >= 2:
+        wid.append(str(wi[i][4].value))
+        w1d.append(str(w1[i][6].value))
+        
+index  = np.array(wid).astype(np.float)
+s1101 = np.array(w1d).astype(np.float)
+
+lm = LinearRegression()
+lm.fit(np.reshape(index, (len(index), 1)), np.reshape(s1101, (len(s1101), 1)))
+
+print(lm.coef_) #係數
+print(lm.intercept_ )#截距
