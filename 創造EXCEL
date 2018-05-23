@@ -1,7 +1,67 @@
+import requests
+from bs4 import BeautifulSoup
+import json
 import os
+import openpyxl
+from openpyxl import load_workbook
+import time
+import pandas as pd
+import datetime
 from openpyxl import Workbook
 
+url="http://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=20180501&stockNo=3008&_=1524705545902"
+res=requests.get(url)
+content=res.text
+data = json.loads(content)
+############
+for i in range(0,10):#創造10個檔案
+    wb = Workbook()
+    wb.active
+    wb.save(str(i)+'.xlsx')#檔案名稱
+############
+    report=[]
+    for line in range(0,len(data["data"])):
+                    row = []
+                    for k in range(0,9):
+                        if  k == 0:
+                            DD = data["data"][line][k].split("/")
+                            DD[0] = str(int(DD[0])+1911)
+                            nd = "/".join(DD)
+                            row.append(nd)
+                        if  k == 1 or k == 3 or k == 8:
+                            content = data["data"][line][k].split(',')
+                            num = ""
+                            for n in range (0,len(content)):
+                                num = num + content[n]
+                                float(num)
+                            row.append(num)
+                        else:
+                            row.append(data["data"][line][k])
+                    report.append(row)
 for i in range(0,10):
-wb = Workbook()
-wb.active
-wb.save(str(i)+'.xlsx')
+    wb = Workbook()
+    wb.active
+    wb.save(str(i)+'.xlsx')
+    report=[]
+    for line in range(0,len(data["data"])):
+                    row = []
+                    for k in range(0,9):
+                        if  k == 0:
+                            DD = data["data"][line][k].split("/")
+                            DD[0] = str(int(DD[0])+1911)
+                            nd = "/".join(DD)
+                            row.append(nd)
+                        if  k == 1 or k == 3 or k == 8:
+                            content = data["data"][line][k].split(',')
+                            num = ""
+                            for n in range (0,len(content)):
+                                num = num + content[n]
+                                float(num)
+                            row.append(num)
+                        else:
+                            row.append(data["data"][line][k])
+                    report.append(row)
+    df = pd.DataFrame(report)#把資料做成pd格式
+    writer = pd.ExcelWriter(str(i)+'.xlsx', engine='xlsxwriter')#pd寫入目標資料
+    df.to_excel(writer, sheet_name='Sheet1',header=False,index=False)#創造sheet
+    writer.save()#儲存資料
