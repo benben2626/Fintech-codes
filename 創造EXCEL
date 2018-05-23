@@ -1,0 +1,7 @@
+import os
+from openpyxl import Workbook
+
+for i in range(0,10):
+wb = Workbook()
+wb.active
+wb.save(str(i)+'.xlsx')
