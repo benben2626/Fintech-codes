@@ -1,0 +1,71 @@
+import requests
+from bs4 import BeautifulSoup
+import json
+import os
+import openpyxl
+from openpyxl import load_workbook
+import time
+import pandas as pd
+import datetime
+from openpyxl import Workbook
+os.chdir('C:\\Users\\BEN\\pythonexcel')
+
+#股票代碼EXCEL
+wb = load_workbook('上市公司代碼.xlsx')
+ws = wb['name']
+
+#輸入年分
+f=int(input("First year(e.x.2016): "))
+l=int(input("last year(e.x.2018): "))
+
+for i in range(2,ws.max_row+1):
+    wb = Workbook()
+    wb.active        
+    report=[]
+    row=[]
+    url="http://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=20180101&stockNo=1101&_=1524705545902"
+    res=requests.get(url)
+    content=res.text
+    data = json.loads(content)
+    for title in range(0,len(data["fields"])):
+        row.append(data["fields"][title])
+    report.append(row)
+    #id 判定
+    stockid = str(ws[i][0].value)
+    for y in range(f,l+1):
+        for m in range(1,13):
+            if(len(str(m))==1):
+                m="0"+str(m)
+            stockdata = str(y)+str(m)+"01"
+            print (stockdata)
+            time.sleep(5)
+            url="http://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date="+stockdata+"&stockNo="+stockid+"&_=1524705545902"
+            res=requests.get(url)
+            content=res.text
+            data = json.loads(content)
+            if ("很抱歉" in data["stat"] ) or ("小於" in data["stat"] ) :
+                print("日期錯誤或早於資料庫日期")
+                print("最早日期:1992/01")
+                break
+            elif ("大於" in data["stat"] ) :
+                print("已無資料")
+                break
+            else:
+                for line in range(0,len(data["data"])):
+                    row = []
+                    for k in range(0,9):
+                        if k == 1 or k == 2 or k == 8:
+                            content = data["data"][line][k].split(',')
+                            num = ""
+                            for n in range (0,len(content)):
+                                num = num + content[n]
+                                float(num)
+                            row.append(num)
+                        else:
+                            row.append(data["data"][line][k])
+                    report.append(row)
+    pd.DataFrame(report)
+    df = pd.DataFrame(report)
+    writer = pd.ExcelWriter(str(ws[i][0].value)+str(ws[i][1].value)+str(ws[i][4].value)+'.xlsx', engine='xlsxwriter')
+    df.to_excel(writer, sheet_name='Sheet1',header=False,index=False)
+    writer.save()
