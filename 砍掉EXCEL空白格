@@ -1,0 +1,22 @@
+wb = load_workbook('上市公司代碼.xlsx')
+ws = wb['sheet1']
+#a = ws[3][1].value.split(' ')[0] #測試哪一格要刪空格(0為要提取的格子可自行修改
+
+report = []
+row = []
+for i in range(1,ws.max_row):
+    row=[]
+    for k in range(0,ws.max_column):
+        if k >= 1 and ws[i][k].value == ws[i][1].value:
+            a = ws[i][1].value.split(' ')[0]
+            row.append(a)
+        else:
+            row.append(ws[i][k].value)
+    report.append(row)
+pd.DataFrame(report)
+
+#SAVE
+df = pd.DataFrame(report)
+writer = pd.ExcelWriter('上市公司代碼.xlsx', engine='xlsxwriter')
+df.to_excel(writer, sheet_name='sheet1',header=False,index=False)
+writer.save()
