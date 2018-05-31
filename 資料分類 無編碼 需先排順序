@@ -1,0 +1,38 @@
+import os
+import openpyxl
+import pandas as pd
+from openpyxl import load_workbook
+
+wb = load_workbook('ttstock.xlsx')
+ws = wb['DD']
+
+dataset = []
+row=[]
+n=1
+t=1
+
+for i in range(1,ws.max_row):
+    row=[]
+    if i == 1:
+        row.append('證券代碼')
+        row.append('簡稱')
+        row.append('年月日')
+        row.append('收盤價')
+        dataset.append(row)
+        row = []
+    for j in range(0,ws.max_column):
+        row.append(ws[i][j].value)
+    dataset.append(row)
+    if ws[i+1][0].value == ws[i][0].value:
+        continue
+    elif ws[i+1][0].value != ws[i][0].value:
+        download(dataset)
+        dataset = []
+        row = []
+        row.append('證券代碼')
+        row.append('簡稱')
+        row.append('年月日')
+        row.append('收盤價')
+        dataset.append(row)
+    if ws[i+1][0].value == None:
+        break
