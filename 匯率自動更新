@@ -1,0 +1,52 @@
+import requests
+from bs4 import BeautifulSoup
+import json
+import os
+import openpyxl
+from openpyxl import load_workbook
+import time
+import pandas as pd
+import time
+import datetime
+
+#幣別字典
+wb = load_workbook('exchange.xlsx')
+ws = wb['currency']
+curr = []
+name = []
+for i in range(1,ws.max_row+1):
+    curr.append(ws[i][0].value)
+    name.append(ws[i][1].value)
+
+for i in range(0,len(curr)):
+    a = 'E'+name[i]+curr[i]+'.xlsx'
+    wb =load_workbook(a)
+    ws = wb['Sheet1']
+    #爬取
+    url="http://rate.bot.com.tw/xrt/quote/l6m/"+curr[i]
+    res=requests.get(url)
+    content=res.text
+    soup = BeautifulSoup(content,'lxml')
+    dataset=[]
+    row = []
+    j=0
+    for k in soup.findAll("td"):
+        row.append(k.get_text())
+        j = j+1
+        if j > 5:
+            dataset.append(row)
+            row = []
+            j = 0
+    dataset.sort(key=lambda row:row,reverse=False)
+    #資料建構
+    pd.DataFrame(dataset)
+    wb = load_workbook(a)
+    ws = wb['Sheet1']
+    # 更新
+    if datetime.datetime.now()>datetime.datetime.strptime(ws[ws.max_row][0].value, "%Y/%m/%d"):
+        for i in range(0,len(dataset)):
+            if datetime.datetime.strptime(dataset[i][0], "%Y/%m/%d")> datetime.datetime.strptime(ws[ws.max_row][0].value, "%Y/%m/%d"):
+                for j in range(0,6):
+                    ws.cell(row=i+2,column=j+1).value=dataset[i][j]
+                    wb.save(filename = a)
+print('completion')
