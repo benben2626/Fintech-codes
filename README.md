@@ -1,4 +1,4 @@
-# Here are some python code of me 
+# Here are some python programmimgs of me 
 # 投資相關程式及資料的整理
 
 資料分析腳本
