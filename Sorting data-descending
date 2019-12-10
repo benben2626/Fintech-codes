@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
-stockid=input("請輸入股票代號:")
+stockid=input("Please enter the stock code:")
 
 
 res=requests.get("https://stock.wearn.com/cdata.asp?kind="+str(stockid))
@@ -26,6 +26,6 @@ for i in soup.findAll("tr",{"class":"stockalllistbg2"}):
         row.append(j.get_text())
     current.append(row)
 
-current.sort(key=lambda row:row[0],reverse=True)#反轉
+current.sort(key=lambda row:row[0],reverse=True)#up-side-down
 print(soup.find("td",{"colspan":"6"}).get_text())
 print(pd.DataFrame(current))
