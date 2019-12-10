@@ -8,13 +8,13 @@ import time
 import pandas as pd
 import datetime
 
-#網頁 get Format
+#Webpage get Format
 url="http://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=20180501&stockNo=3008&_=1524705545902"
 res=requests.get(url)
 content=res.text
 data = json.loads(content)
 
-#要抓取的資料Range
+#Data to crawl-Range
 report=[]
 for line in range(0,len(data["data"])):
                 row = []
@@ -40,7 +40,7 @@ pd.DataFrame(report)
 wb = load_workbook('stocktrade.xlsx')
 ws = wb['1805']
 
-#日期判定(只加入新日期)
+#Date recognition (only new date added)
 if datetime.datetime.now()>datetime.datetime.strptime(ws[ws.max_row][0].value, "%Y/%m/%d"):
     for i in range(0,len(report)):
         if datetime.datetime.strptime(report[i][0], "%Y/%m/%d")> datetime.datetime.strptime(ws[ws.max_row][0].value, "%Y/%m/%d"):
