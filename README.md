@@ -1,36 +1,36 @@
 # Here are some python programmimgs of me 
-# 投資相關程式及資料的整理
+# Data collation, investment analysis, and web crawling
 
-資料分析腳本
-*爬蟲
-*圖表
-*策略分析
+Data analysis script
+* web crawling
+* chart
+* Strategic Analysis
 
-資料通常以 dataframe 架構呈現
+Data is usually presented in a dataframe
 
-## 政府開放資料平台相關連結
+## Government Open Information Platform Related Links (Taiwan)
 
-* [上市公司基本資料](https://data.gov.tw/dataset/18419)
-* [上櫃股票基本資料](https://data.gov.tw/dataset/25036)
-* [興櫃公司基本資料](https://data.gov.tw/dataset/28568)
-* [證券商基本資料](https://data.gov.tw/dataset/20765)
+* [Basic information of listed companies](https://data.gov.tw/dataset/18419)
+* [Basic information of OTC stocks](https://data.gov.tw/dataset/25036)
+* [Basic information of listed companies at emerging stock market](https://data.gov.tw/dataset/28568)
+* [Basic information of securities dealers](https://data.gov.tw/dataset/20765)
 
-## 台灣證券交易所
+## Taiwan Stock Exchange
 
-* [證券商總公司明細表](http://www.twse.com.tw/zh/brokerService/brokerList)
-* [證券商分公司明細表](http://www.twse.com.tw/zh/brokerService/branchList)
-* [買賣日報表查詢系統](http://bsr.twse.com.tw/bshtm/)
-* [市場開市休市日期查詢](http://www.twse.com.tw/zh/holidaySchedule/holidaySchedule)
+* [Detailed List of Brokerage Corporation] (http://www.twse.com.tw/en/brokerService/brokerList)
+* [Detail list of securities dealers] (http://www.twse.com.tw/en/brokerService/branchList)
+* [Buy and sell daily report query system] (http://bsr.twse.com.tw/bshtm/)
+* [Query of market opening and closing dates] (http://www.twse.com.tw/en/holidaySchedule/holidaySchedule)
 
-## 證券櫃檯買賣中心
+## Securities counter trading center
 
-* [券商買賣證券日報表查詢系統](http://www.tpex.org.tw/web/stock/aftertrading/broker_trading/brokerBS.php)
+* [Inquiry System for Daily Reports of Securities Dealing by Securities Dealers]
 
-## 集保資料庫
+## Database
 
-* [集保股權分散表查詢](http://www.tdcc.com.tw/smWeb/QryStock.jsp)
+* [Enquiry for the Consolidated Equity Scattering Table] (http://www.tdcc.com.tw/smWeb/QryStock.jsp)
 
-## 其他參考資料
+## Other references
 
-* [台灣股市股票價格擷取](https://github.com/mlouielu/twstock)
-* [台灣股票即時爬蟲](https://github.com/Asoul/tsrtc)
+* [Taiwan Stock Market Stock Price Extraction] (https://github.com/mlouielu/twstock)
+* [Taiwan Stock Instant Crawler] (https://github.com/Asoul/tsrtc)
