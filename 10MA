@@ -42,7 +42,7 @@ def importexcel(excelname,sheetname):
 
 excelname="fund"
 sheetname="test"
-#定義資料夾
+#Determind Folder
 
 ans=importexcel(excelname,sheetname)
 
