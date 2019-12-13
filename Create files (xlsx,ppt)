@@ -1,0 +1,19 @@
+import requests
+from bs4 import BeautifulSoup
+import json
+import os
+import openpyxl
+from openpyxl import load_workbook
+import time
+import pandas as pd
+import datetime
+from openpyxl import Workbook
+
+wb = Workbook()
+wb.active
+wb.save('exchange.xlsx')#Filename+Extension ex.xlsx,ppt
+
+#for i in range(0,11):#創造10個檔案
+    #wb = Workbook()
+    #wb.active
+    #wb.save(str(i)+'.xlsx')#檔案名稱
