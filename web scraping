@@ -1,0 +1,26 @@
+import requests
+import json
+import os
+from bs4 import BeautifulSoup
+
+#Get the html of the website
+report=[]
+url="https://www.moneydj.com/funddj/yp/yp010000.djhtm?a=ACAI176"
+res=requests.get(url)
+soup = BeautifulSoup(res.text,'lxml')
+
+#First row you want to add
+row=[] #create row
+for i in range(0,4):
+    row.append(soup.findAll("td",{"class","t2"})[i].get_text()) #determine which line you want to scrape
+report.append(row) 
+
+row=[] #clear row
+for i in range(0,4):
+    row.append(soup.findAll("td",{"class","t3n1"})[i].get_text())
+report.append(row)
+
+df = pd.DataFrame(report)#Transform the data to pdf format
+writer = pd.ExcelWriter('柏瑞特別股息收益基金N月配息(人民幣)'+'.xlsx', engine='xlsxwriter')#pd writedown target filename
+df.to_excel(writer, sheet_name='Sheet1',header=False,index=False)#create sheet
+writer.save()#save
