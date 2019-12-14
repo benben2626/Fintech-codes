@@ -1,5 +1,5 @@
 # Here are some python programmimgs of me 
-# Data collation, investment analysis, and web crawling
+# Data collation, investment analysis, and web scraping
 
 Data analysis script
 * web crawling
