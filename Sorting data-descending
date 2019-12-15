@@ -27,6 +27,7 @@ for i in soup.findAll("tr",{"class":"stockalllistbg2"}):
     current.append(row)
 
 current.sort(key=lambda row:row[0],reverse=True)#(from small to big or reverse)
+#current.insert(o,row)insert head
 print(soup.find("td",{"colspan":"6"}).get_text())
 print(pd.DataFrame(current))
 
