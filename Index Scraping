@@ -1,15 +1,22 @@
+#I adopted DJI(Dow Johns) for example.
+#This Program help people how to download the index and save data into excel
+#Special point: reversing data and inserting header
+
+
 import os
 from bs4 import BeautifulSoup
 import requests
 import pandas as pd
 import json
 
-index=[]
-url="https://finance.yahoo.com/quote/%5EDJI/history/"#DJI from yahoo finance
+
+url="https://finance.yahoo.com/quote/%5EDJI/history/"
 res=requests.get(url)
 soup=BeautifulSoup(res.text,'lxml')
+index=[]
 row=[]
-a=0
+a=0#SperateDalilyData
+#Scraping data
 for i in range(0,len(soup.findAll("td",{"class","Py(10px) Ta(start) Pend(10px)"}))):
     row.append(soup.findAll("td",{"class","Py(10px) Ta(start) Pend(10px)"})[i].get_text())
     for j in range(0,6):
@@ -18,7 +25,16 @@ for i in range(0,len(soup.findAll("td",{"class","Py(10px) Ta(start) Pend(10px)"}
             a=a+1
     index.append(row)
     row=[]
-df = pd.DataFrame(index)#tranform data to pd frame
+index.reverse() #reverse row
+
+#Sort header data
+row.append(soup.findAll("th",{"Ta(start) W(100px) Fw(400) Py(6px)"})[0].get_text())
+for z in range(0,len(soup.findAll("th",{"Fw(400) Py(6px)"}))):
+    row.append(soup.findAll("th",{"Fw(400) Py(6px)"})[z].get_text())
+index.insert(0,row) #insert header
+
+#create excel and save data
+df = pd.DataFrame(index )#tranform data to pd frame
 writer = pd.ExcelWriter("INDEX"+'.xlsx', engine='xlsxwriter') #create an excel file and write data(pd) into excel
 df.to_excel(writer, sheet_name='DJI',header=False,index=False) #create a named sheet
-writer.save()#save data
+writer.save() #save data
