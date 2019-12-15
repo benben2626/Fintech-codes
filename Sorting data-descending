@@ -26,6 +26,9 @@ for i in soup.findAll("tr",{"class":"stockalllistbg2"}):
         row.append(j.get_text())
     current.append(row)
 
-current.sort(key=lambda row:row[0],reverse=True)#up-side-down
+current.sort(key=lambda row:row[0],reverse=True)#(from small to big or reverse)
 print(soup.find("td",{"colspan":"6"}).get_text())
 print(pd.DataFrame(current))
+
+##if you want to reverse but don't compare size (just up side down)
+##just type ------ name.reverse()
