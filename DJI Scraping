@@ -1,0 +1,24 @@
+import os
+from bs4 import BeautifulSoup
+import requests
+import pandas as pd
+import json
+
+index=[]
+url="https://finance.yahoo.com/quote/%5EDJI/history/"#DJI from yahoo finance
+res=requests.get(url)
+soup=BeautifulSoup(res.text,'lxml')
+row=[]
+a=0
+for i in range(0,len(soup.findAll("td",{"class","Py(10px) Ta(start) Pend(10px)"}))):
+    row.append(soup.findAll("td",{"class","Py(10px) Ta(start) Pend(10px)"})[i].get_text())
+    for j in range(0,6):
+         row.append(soup.findAll("td",{"class","Py(10px) Pstart(10px)"})[a].get_text())
+         if a < len(soup.findAll("td",{"class","Py(10px) Pstart(10px)"})):
+            a=a+1
+    index.append(row)
+    row=[]
+df = pd.DataFrame(index)#tranform data to pd frame
+writer = pd.ExcelWriter("INDEX"+'.xlsx', engine='xlsxwriter') #create an excel file and write data(pd) into excel
+df.to_excel(writer, sheet_name='DJI',header=False,index=False) #create a named sheet
+writer.save()#save data
