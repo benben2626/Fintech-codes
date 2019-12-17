@@ -15,13 +15,16 @@ res=requests.get(url)
 soup=BeautifulSoup(res.text,'lxml')
 index=[]
 row=[]
+b=0
 a=0#SperateDalilyData
 #Scraping data
 for i in range(0,len(soup.findAll("td",{"class","Py(10px) Ta(start) Pend(10px)"}))):
     row.append(soup.findAll("td",{"class","Py(10px) Ta(start) Pend(10px)"})[i].get_text())
     for j in range(0,6):
-         row.append(soup.findAll("td",{"class","Py(10px) Pstart(10px)"})[a].get_text())
-         if a < len(soup.findAll("td",{"class","Py(10px) Pstart(10px)"})):
+        b=soup.findAll("td",{"class","Py(10px) Pstart(10px)"})[a].get_text().replace(',','') #cut comma
+        b=float(b) #transfer str to float(can be calculated)
+        row.append(b)
+        if a < len(soup.findAll("td",{"class","Py(10px) Pstart(10px)"})):
             a=a+1
     index.append(row)
     row=[]
