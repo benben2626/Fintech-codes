@@ -14,4 +14,10 @@ start = dt.datetime(2019,1,1)
 end = dt.datetime(2019,12,19)
 
 df = web.DataReader('^DJI','yahoo',start,end)#1st:code,2ed:stock data website.
-print(df.head(365))#num is how many dates you want to show.
+#print(df.head(365))#num is how many dates you want to show.
+
+#download to file
+df = pd.DataFrame(df)
+writer = pd.ExcelWriter("FUND"+'.xlsx', engine='xlsxwriter') #name file you want (Carefully overlapping filename will clear old one)
+df.to_excel(writer, sheet_name='PFF',header=True,index=True)  #name sheet you want
+writer.save() #save data
