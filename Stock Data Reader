@@ -39,5 +39,5 @@ df.ohlc = df['Adj Close'].resample('10D').ohlc()
 #l=low (the lowest price of Adj Close in 10days)
 #c=close (the price of the last day of Adj Close in 10days)
 df.volume = df['Volume'].resample('10D').sum()
-
+### There are many maths can be used such as mean/sum ect.
 plt.show()
