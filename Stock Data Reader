@@ -33,4 +33,11 @@ ax1.plot(df.index, df['Adj Close'])
 ax1.plot(df.index, df['10ma'])
 ax2.bar(df.index, df['Volume'])
 
+df.ohlc = df['Adj Close'].resample('10D').ohlc()
+#O=open (the price of the first day of Adj Close in 10days)
+#h=high (the highest price of Adj Close in 10days)
+#l=low (the lowest price of Adj Close in 10days)
+#c=close (the price of the last day of Adj Close in 10days)
+df.volume = df['Volume'].resample('10D').sum()
+
 plt.show()
