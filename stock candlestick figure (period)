@@ -2,7 +2,7 @@
 ##time
 import datetime as dt
 ##figure
-#%matplotlib qt (if figure cannot show out
+#%matplotlib qt (if figure cannot show out)
 import matplotlib.pyplot as plt
 from matplotlib import style
 from pandas.plotting import register_matplotlib_converters
