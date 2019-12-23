@@ -22,18 +22,21 @@ df.to_csv('tsla.csv') #df text save to target csv
 df = pd.read_csv('tsla.csv', parse_dates=True, index_col=0) #circle column 0 t0 index
 #condition(https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html)
 
-#df['Close'].plot()
-#df[['Open','Close']].head()
+
+#df['Close'].plot() #show plot
+#df[['Open','Close']].head() #head(num) show how many  nums from head
 #df.dropna(inplace=True)#pass NA num
-#df.tail()
+#df.tail() #show from tail
 
 #df['10ma']=df['Adj Close'].rolling(window=10).mean() #MA(ex.10ma)
 df['10ma']=df['Adj Close'].rolling(window=10, min_periods=0).mean() #As the previous num if num=na
+df['20ma']=df['Adj Close'].rolling(window=20, min_periods=0).mean()
+df['30ma']=df['Adj Close'].rolling(window=30, min_periods=0).mean()
 #df[['Adj Close','10ma','20ma','30ma']].plot()#Choose which col want to be showed.
 
 #Design graph
 ##figure
-###figure 1
+###figure 
 #(show out figure)
 %matplotlib qt 
 ax1=plt.subplot2grid((6,1),(0,0), rowspan=5,colspan=1)
@@ -42,5 +45,7 @@ ax2=plt.subplot2grid((6,1),(5,0), rowspan=1,colspan=1)
 #x,y
 ax1.plot(df.index, df['Adj Close'])
 ax1.plot(df.index, df['10ma'])
+ax1.plot(df.index, df['20ma'])
+ax1.plot(df.index, df['30ma'])
 #2ed figure
 ax2.bar(df.index, df['Volume'])
