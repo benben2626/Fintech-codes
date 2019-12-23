@@ -52,7 +52,7 @@ df_ohlc = df['Adj Close'].resample('10D').ohlc()
 df_volume = df['Volume'].resample('10D').sum()
 ### There are many maths can be used such as mean/sum ect.
 
-from mpl_finance import candlestick_ohlc <----- ##Need to (pip install mpl-finance) in prompt
+from mpl_finance import candlestick_ohlc #<----- ##Need to (pip install mpl-finance) in prompt
 import matplotlib.dates as mdates
 
 #transfer dates to mlpdates codes
