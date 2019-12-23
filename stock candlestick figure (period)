@@ -1,4 +1,4 @@
-#If you have no modual of pandas_datareader that go to my development plan to see steps how to install that in my install file. Thanks.
+#If you have no modual of pandas_datareader please (conda install pandas-datareader) in Acon prompt
 ##time
 import datetime as dt
 ##figure
