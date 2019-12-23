@@ -2,8 +2,7 @@
 ##time
 import datetime as dt
 ##figure
-%matplotlib inline
-%matplotlib notebook
+%matplotlib qt
 import matplotlib.pyplot as plt
 from matplotlib import style
 from pandas.plotting import register_matplotlib_converters
