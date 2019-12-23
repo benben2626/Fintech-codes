@@ -2,7 +2,6 @@
 ##time
 import datetime as dt
 ##figure
-%matplotlib qt
 import matplotlib.pyplot as plt
 from matplotlib import style
 from pandas.plotting import register_matplotlib_converters
@@ -14,26 +13,28 @@ import pandas_datareader.data as web
 
 
 style.use('ggplot')
+#time
 start = dt.datetime(2019,1,1)
 end = dt.datetime(2019,12,1)
 
-df = web.DataReader('xxx','yahoo',start,end)
-df.to_csv('XXx.csv') #df text save to target csv
-df = pd.read_csv('xxx.csv', parse_dates=True, index_col=0) #circle column 0 t0 index
+df = web.DataReader('tsla','yahoo',start,end) #stock names can be search on yahoo finance
+df.to_csv('tsla.csv') #df text save to target csv
+df = pd.read_csv('tsla.csv', parse_dates=True, index_col=0) #circle column 0 t0 index
 #condition(https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.read_csv.html)
 
-df['Close'].plot()
-df[['Open','Close']].head()
-df.dropna(inplace=True)#pass NA num
-df.tail()
+#df['Close'].plot()
+#df[['Open','Close']].head()
+#df.dropna(inplace=True)#pass NA num
+#df.tail()
 
-df['10ma']=df['Adj Close'].rolling(window=10).mean() #MA(ex.10ma)
+#df['10ma']=df['Adj Close'].rolling(window=10).mean() #MA(ex.10ma)
 df['10ma']=df['Adj Close'].rolling(window=10, min_periods=0).mean() #As the previous num if num=na
-df[['Adj Close','10ma','20ma','30ma']].plot()#Choose which col want to be showed.
+#df[['Adj Close','10ma','20ma','30ma']].plot()#Choose which col want to be showed.
 
 #Design graph
 ##figure
 ###figure 1
+%matplotlib qt #(show out figure)
 ax1=plt.subplot2grid((6,1),(0,0), rowspan=5,colspan=1)
 ###figure 3
 ax2=plt.subplot2grid((6,1),(5,0), rowspan=1,colspan=1)
@@ -42,33 +43,3 @@ ax1.plot(df.index, df['Adj Close'])
 ax1.plot(df.index, df['10ma'])
 #2ed figure
 ax2.bar(df.index, df['Volume'])
-
-#stock plot
-df_ohlc = df['Adj Close'].resample('10D').ohlc()
-##O=open (the price of the first day of Adj Close in 10days)
-##h=high (the highest price of Adj Close in 10days)
-##l=low (the lowest price of Adj Close in 10days)
-##c=close (the price of the last day of Adj Close in 10days)
-df_volume = df['Volume'].resample('10D').sum()
-### There are many maths can be used such as mean/sum ect.
-
-from mpl_finance import candlestick_ohlc #<----- ##Need to (pip install mpl-finance) in prompt
-import matplotlib.dates as mdates
-
-#transfer dates to mlpdates codes
-df_ohlc.reset_index(inplace=True)
-df_ohlc['Date'] = df_ohlc['Date'].map(mdates.date2num)
-
-#figure
-ax1 = plt.subplot2grid((6,1), (0,0), rowspan=5, colspan=1)
-ax2 = plt.subplot2grid((6,1), (5,0), rowspan=1, colspan=1, sharex=ax1)
-#mdate --> xaxis
-ax1.xaxis_date()
-# line ----> candlestick
-candlestick_ohlc(ax1, df_ohlc.values, width=5, colorup='g')
-# x,y axis
-ax2.fill_between(df_volume.index.map(mdates.date2num), df_volume.values, 0)
-
-#plt.show() <---- can't be used in conda 
-
-
