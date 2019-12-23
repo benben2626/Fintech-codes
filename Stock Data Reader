@@ -34,7 +34,8 @@ df['10ma']=df['Adj Close'].rolling(window=10, min_periods=0).mean() #As the prev
 #Design graph
 ##figure
 ###figure 1
-%matplotlib qt #(show out figure)
+#(show out figure)
+%matplotlib qt 
 ax1=plt.subplot2grid((6,1),(0,0), rowspan=5,colspan=1)
 ###figure 3
 ax2=plt.subplot2grid((6,1),(5,0), rowspan=1,colspan=1)
