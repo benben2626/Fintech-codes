@@ -1,12 +1,18 @@
 #If you have no modual of pandas_datareader that go to my development plan to see steps how to install that in my install file. Thanks.
-
+##time
 import datetime as dt
+##figure
+%matplotlib inline
+%matplotlib notebook
 import matplotlib.pyplot as plt
 from matplotlib import style
-import pandas as pd
-import pandas_datareader.data as web
 from pandas.plotting import register_matplotlib_converters
 register_matplotlib_converters()
+##dataframe
+import pandas as pd
+import pandas_datareader.data as web
+
+
 
 style.use('ggplot')
 start = dt.datetime(2019,1,1)
@@ -26,23 +32,44 @@ df['10ma']=df['Adj Close'].rolling(window=10).mean() #MA(ex.10ma)
 df['10ma']=df['Adj Close'].rolling(window=10, min_periods=0).mean() #As the previous num if num=na
 df[['Adj Close','10ma','20ma','30ma']].plot()#Choose which col want to be showed.
 
-Design graph
+#Design graph
+##figure
+###figure 1
 ax1=plt.subplot2grid((6,1),(0,0), rowspan=5,colspan=1)
+###figure 3
 ax2=plt.subplot2grid((6,1),(5,0), rowspan=1,colspan=1)
+#x,y
 ax1.plot(df.index, df['Adj Close'])
 ax1.plot(df.index, df['10ma'])
+#2ed figure
 ax2.bar(df.index, df['Volume'])
 
-df.ohlc = df['Adj Close'].resample('10D').ohlc()
-#O=open (the price of the first day of Adj Close in 10days)
-#h=high (the highest price of Adj Close in 10days)
-#l=low (the lowest price of Adj Close in 10days)
-#c=close (the price of the last day of Adj Close in 10days)
-df.volume = df['Volume'].resample('10D').sum()
+#stock plot
+df_ohlc = df['Adj Close'].resample('10D').ohlc()
+##O=open (the price of the first day of Adj Close in 10days)
+##h=high (the highest price of Adj Close in 10days)
+##l=low (the lowest price of Adj Close in 10days)
+##c=close (the price of the last day of Adj Close in 10days)
+df_volume = df['Volume'].resample('10D').sum()
 ### There are many maths can be used such as mean/sum ect.
 
 from mpl_finance import candlestick_ohlc <----- ##Need to (pip install mpl-finance) in prompt
 import matplotlib.dates as mdates
 
+#transfer dates to mlpdates codes
+df_ohlc.reset_index(inplace=True)
+df_ohlc['Date'] = df_ohlc['Date'].map(mdates.date2num)
 
-plt.show()
+#figure
+ax1 = plt.subplot2grid((6,1), (0,0), rowspan=5, colspan=1)
+ax2 = plt.subplot2grid((6,1), (5,0), rowspan=1, colspan=1, sharex=ax1)
+#mdate --> xaxis
+ax1.xaxis_date()
+# line ----> candlestick
+candlestick_ohlc(ax1, df_ohlc.values, width=5, colorup='g')
+# x,y axis
+ax2.fill_between(df_volume.index.map(mdates.date2num), df_volume.values, 0)
+
+#plt.show() <---- can't be used in conda 
+
+
