@@ -35,13 +35,16 @@ def get_data_from_yahoo(reload_sp500=False):
         os.makedirs('stock_dfs') #create folder
 
     start=dt.datetime(2010,1,1)
-    end=dt.datetime(2016,12,31)
-    
-    for ticker in tickers[:10]: # [:10] This set is for getting cpny 1 to 10 on the list, don't need to add if you'd like to get all of cpny.
+    end=dt.datetime(2019,12,31)
+
+    for ticker in tickers:
         print(ticker)
         if not os.path.exists('stock_dfs/{}.csv'.format(ticker)):
-            df=web.DataReader(ticker,'yahoo',start,end)
-            df.to_csv('stock_dfs/{}.csv'.format(ticker))
+            try: # some company have some problem of dates dataframe 
+                df=web.DataReader(ticker,'yahoo',start,end)
+                df.to_csv('stock_dfs/{}.csv'.format(ticker))
+            except KeyError:
+                pass
         else:
             print('Already have{}'.format(ticker))
             
@@ -51,23 +54,61 @@ def compile_data():
     with open("sp500tickers.pickle","rb") as f:
         tickers=pickle.load(f)
         
-    main_df= pd.DataFrame() #create a dataframe
-    #for count,ticker in enumerate(tickers): #enumerate=count all of the list, if you'd like to get all comapany's data in the list
-    for ticker in tickers[:10]: 
-        df=pd.read_csv("stock_dfs/{}.csv".format(ticker))
-        df.set_index('Date',inplace=True)
-        
-        df.rename(columns={'Adj Close':ticker},inplace=True)
-        df.drop(['Open','High','Low','Close','Volume'],1,inplace=True) #delete
-        
-        if main_df.empty:
-            main_df = df
-        else:
-            main_df =main_df.join(df, how='outer')
-        #if count % 10 == 0: #if you use enumerate that this is a good way to know how many tickers done in the process.
-            #print(count)
+    main_df= pd.DataFrame()
+    for count,ticker in enumerate(tickers): #enumerate=count all of the list
+        try: 
+            df=pd.read_csv("stock_dfs/{}.csv".format(ticker))
+            df.set_index('Date',inplace=True)
+
+            df.rename(columns={'Adj Close':ticker},inplace=True)
+            df.drop(['Open','High','Low','Close','Volume'],1,inplace=True)
+
+            if main_df.empty:
+                main_df = df
+            else:
+                main_df =main_df.join(df, how='outer')
+            if count % 10 == 0:
+                print(count)
+        except FileNotFoundError:
+                pass
     
     print(main_df.head())
-    main_df.to_csv('sp500_joined_closes.csv') #auto create any save file
+    main_df.to_csv('sp500_joined_closes.csv')
     
 compile_data()
+
+import matplotlib.pyplot as plt
+from matplotlib import style
+import numpy as np
+
+style.use('ggplot')
+def visualize_data():
+    df = pd.read_csv('sp500_joined_closes.csv')
+        #df['AAPL'].plot()
+        #plt.show()
+    df_corr=df.corr()
+    print(df_corr.head())
+    
+    data=df_corr.values
+    fig=plt.figure()
+    ax=fig.add_subplot(1,1,1)
+    
+    heatmap=ax.pcolor(data,cmap=plt.cm.RdYlGn)
+    fig.colorbar(heatmap)
+    ax.set_xticks(np.arange(data.shape[0])+0.5,minor=False)
+    ax.set_yticks(np.arange(data.shape[1])+0.5,minor=False)
+    ax.invert_yaxis()
+    ax.xaxis.tick_top()
+    
+    column_labels=df_corr.columns
+    row_labels=df_corr.index
+    
+    ax.set_xticklabels(column_labels)
+    ax.set_yticklabels(row_labels)
+    plt.xticks(rotation=90)
+    heatmap.set_clim(-1,1)
+    plt.tight_layout
+    plt.show()
+    
+visualize_data()
+
