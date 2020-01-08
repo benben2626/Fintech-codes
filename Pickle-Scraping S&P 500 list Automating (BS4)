@@ -58,7 +58,7 @@ def compile_data():
         df.set_index('Date',inplace=True)
         
         df.rename(columns={'Adj Close':ticker},inplace=True)
-        df.drop(['Open','High','Low','Close','Volume'],1,inplace=True)
+        df.drop(['Open','High','Low','Close','Volume'],1,inplace=True) #delete
         
         if main_df.empty:
             main_df = df
