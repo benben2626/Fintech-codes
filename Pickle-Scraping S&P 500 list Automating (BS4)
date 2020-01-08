@@ -37,7 +37,7 @@ def get_data_from_yahoo(reload_sp500=False):
     start=dt.datetime(2010,1,1)
     end=dt.datetime(2019,12,31)
 
-    for ticker in tickers:
+    for ticker in tickers: #[:10] = 1-10
         print(ticker)
         if not os.path.exists('stock_dfs/{}.csv'.format(ticker)):
             try: # some company have some problem of dates dataframe 
@@ -55,7 +55,7 @@ def compile_data():
         tickers=pickle.load(f)
         
     main_df= pd.DataFrame()
-    for count,ticker in enumerate(tickers): #enumerate=count all of the list
+    for count,ticker in enumerate(tickers): #enumerate=count all of names on the list
         try: 
             df=pd.read_csv("stock_dfs/{}.csv".format(ticker))
             df.set_index('Date',inplace=True)
