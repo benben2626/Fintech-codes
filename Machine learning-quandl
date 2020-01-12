@@ -15,7 +15,7 @@ df['HL_PCT'] = (df['Adj. High'] - df['Adj. Low']) / df['Adj. Close'] * 100.0 #Hi
 df['PCT_change'] = (df['Adj. Close'] - df['Adj. Open']) / df['Adj. Open'] * 100.0 #Close-Open/Open
 
 df = df[['Adj. Close', 'HL_PCT', 'PCT_change', 'Adj. Volume']]
-#print(df.head())
+print(df.tail(20))
 
 import quandl, math
 import numpy as np
@@ -28,19 +28,60 @@ forecast_col = 'Adj. Close'
 df.fillna(value=-99999, inplace=True) #outlier feature
 forecast_out = int(math.ceil(0.01 * len(df)))# math=smallest integral value greater than the number=3.5 to 4
 #features are a bunch of the current values, and the label shall be the price
-
 df['label'] = df[forecast_col].shift(-forecast_out)#future price
-df.dropna(inplace=True) #delete missing data
+
 X = np.array(df.drop(['label'], 1)) # feature #1=axis ##delete the 'label' column #training
+X = preprocessing.scale(X) #Standardize ##(X-X_mean)/X_std #helpful for training data
+X_lately = X[-forecast_out:] # X_lately variable contains the most recent features
+X = X[:-forecast_out]
+df.dropna(inplace=True) #delete missing data
+
 y = np.array(df['label']) # lable #create a array which incluing label. #testing
-XS = preprocessing.scale(X) #Standardize ##(X-X_mean)/X_std #helpful for training data
-y = np.array(df['label'])
-XS_train, XS_test, y_train, y_test = train_test_split(XS, y, test_size=0.2) #20% go to test
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2) #20% go to test
 
 ## use one below which got a highest score
 #clf = svm.SVR()
-#clf = LinearRegression()
+clf = LinearRegression(n_jobs=-1) #maximises core usage (highest effective)
+clf.fit(X_train, y_train) #fit=train
+confidence = clf.score(X_test, y_test) #score=test
+# print(confidence)
 
-clf.fit(XS_train, y_train)
-confidence = clf.score(XS_test, y_test)
-print(confidence)
+## test which kernal is best
+#for k in ['linear','poly','rbf','sigmoid']: #rbf(Eucledian Distance),default=’rbf’
+    #clf = svm.SVR(kernel=k)
+    #clf.fit(X_train, y_train)
+    #confidence = clf.score(X_test, y_test)
+    #print(k,confidence)
+
+forecast_set = clf.predict(X_lately)
+df['Forecast']=np.nan
+
+print(forecast_set, confidence, forecast_out)
+
+import datetime
+import matplotlib.pyplot as plt
+from matplotlib import style
+
+style.use('ggplot')
+
+df['Forecast'] = np.nan #create new column and set the value as a NaN first
+last_date = df.iloc[-1].name #Index Position # 0= first date 1=last date
+last_unix = last_date.timestamp() #Unix time
+one_day = 86400 #1day needs sec
+next_unix = last_unix + one_day
+
+for i in forecast_set:
+    next_date = datetime.datetime.fromtimestamp(next_unix)
+    next_unix += 86400
+    df.loc[next_date] = [np.nan for _ in range(len(df.columns)-1)]+[i] #othersixclomnsnan,forecastseti
+    print(df.loc[next_date])
+--------------------------------------------------------------------
+#execute at another line
+%matplotlib qt
+df['Adj. Close'].plot()
+df['Forecast'].plot()
+plt.legend(loc=4)
+plt.xlabel('Date')
+plt.ylabel('Price')
+plt.show()
