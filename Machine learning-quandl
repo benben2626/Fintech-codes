@@ -15,7 +15,7 @@ df['HL_PCT'] = (df['Adj. High'] - df['Adj. Low']) / df['Adj. Close'] * 100.0 #Hi
 df['PCT_change'] = (df['Adj. Close'] - df['Adj. Open']) / df['Adj. Open'] * 100.0 #Close-Open/Open
 
 df = df[['Adj. Close', 'HL_PCT', 'PCT_change', 'Adj. Volume']]
-print(df.tail(20))
+#print(df.tail())
 
 import quandl, math
 import numpy as np
@@ -42,10 +42,14 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2) #20% go
 
 ## use one below which got a highest score
 #clf = svm.SVR()
+#clf = svm.SVR(kernel='poly')
+#clf = svm.SVR(kernel='linear')
+#clf = svm.SVR(kernel='sigmoid')
 clf = LinearRegression(n_jobs=-1) #maximises core usage (highest effective)
+
 clf.fit(X_train, y_train) #fit=train
 confidence = clf.score(X_test, y_test) #score=test
-# print(confidence)
+#print(confidence)
 
 ## test which kernal is best
 #for k in ['linear','poly','rbf','sigmoid']: #rbf(Eucledian Distance),default=’rbf’
@@ -53,6 +57,7 @@ confidence = clf.score(X_test, y_test) #score=test
     #clf.fit(X_train, y_train)
     #confidence = clf.score(X_test, y_test)
     #print(k,confidence)
+    
 
 forecast_set = clf.predict(X_lately)
 df['Forecast']=np.nan
@@ -75,9 +80,10 @@ for i in forecast_set:
     next_date = datetime.datetime.fromtimestamp(next_unix)
     next_unix += 86400
     df.loc[next_date] = [np.nan for _ in range(len(df.columns)-1)]+[i] #othersixclomnsnan,forecastseti
-    print(df.loc[next_date])
---------------------------------------------------------------------
-#execute at another line
+    #print(df.loc[next_date])
+
+--------------------------------------------------------------
+execute this at next line
 %matplotlib qt
 df['Adj. Close'].plot()
 df['Forecast'].plot()
