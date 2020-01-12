@@ -17,3 +17,29 @@ df['PCT_change'] = (df['Adj. Close'] - df['Adj. Open']) / df['Adj. Open'] * 100.
 df = df[['Adj. Close', 'HL_PCT', 'PCT_change', 'Adj. Volume']]
 #print(df.head())
 
+import quandl, math
+import numpy as np
+import pandas as pd
+from sklearn import preprocessing, svm
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split #new version for cross_validation
+
+forecast_col = 'Adj. Close'
+df.fillna(value=-99999, inplace=True) #outlier feature
+forecast_out = int(math.ceil(0.01 * len(df)))# math=smallest integral value greater than the number=3.5 to 4
+#features are a bunch of the current values, and the label shall be the price
+
+df['label'] = df[forecast_col].shift(-forecast_out)#future price
+df.dropna(inplace=True) #delete missing data
+X = np.array(df.drop(['label'], 1)) # feature #1=axis ##delete the 'label' column #training
+y = np.array(df['label']) # lable #create a array which incluing label. #testing
+XS = preprocessing.scale(X) #Standardize ##(X-X_mean)/X_std #helpful for training data
+y = np.array(df['label'])
+XS_train, XS_test, y_train, y_test = train_test_split(XS, y, test_size=0.2) #20% go to test
+
+## use one below which got a highest score
+#clf = svm.SVR()
+#clf = LinearRegression()
+
+confidence = clf.score(XS_test, y_test)
+print(confidence)
