@@ -8,7 +8,7 @@ Data analysis script
 * Sentiment Analysis
 * Stock chart
 
-Data is usually presented in a dataframe
+Data are mostly presented by dataframe
 
 ## US Stock Market
 
@@ -29,7 +29,7 @@ Data is usually presented in a dataframe
 * [Buy and sell daily report query system] (http://bsr.twse.com.tw/bshtm/)
 * [Query of market opening and closing dates] (http://www.twse.com.tw/en/holidaySchedule/holidaySchedule)
 
-## Securities counter trading center (Taiwan)
+## Securities Counter Trading Center (Taiwan)
 
 * [Inquiry System for Daily Reports of Securities Dealing by Securities Dealers]
 
@@ -37,7 +37,7 @@ Data is usually presented in a dataframe
 
 * [Enquiry for the Consolidated Equity Scattering Table] (http://www.tdcc.com.tw/smWeb/QryStock.jsp)
 
-## Other references (Taiwan)
+## Other References (Taiwan)
 
 * [Taiwan Stock Market Stock Price Extraction] (https://github.com/mlouielu/twstock)
 * [Taiwan Stock Instant Crawler] (https://github.com/Asoul/tsrtc)
