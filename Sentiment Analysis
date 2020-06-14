@@ -13,7 +13,7 @@ from datetime import datetime,date,timedelta
 finwiz_url = 'https://finviz.com/quote.ashx?t='
 
 news_tables = {}
-tickers = ['DAL', 'UAL', 'KO'] #Here are three stock code I choose.
+tickers = ['DAL', 'UAL', 'KO'] #Here are three stock tickers I choose.
 
 for ticker in tickers:
     url = finwiz_url + ticker
