@@ -4,6 +4,7 @@
 Data analysis script
 * Web crawling
 * Datareader
+* Machine Learning
 * Strategic Analysis
 * Sentiment Analysis
 * Stock chart
