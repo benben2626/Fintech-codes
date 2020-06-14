@@ -2,11 +2,18 @@
 ## Data collation, investment analysis, and web scraping
 
 Data analysis script
-* web crawling
-* chart
+* Web crawling
+* Datareader
 * Strategic Analysis
+* Sentiment Analysis
+* Stock chart
 
 Data is usually presented in a dataframe
+
+## US Stock Market
+
+* [Stock data - Yahoo Finance](https://finance.yahoo.com/)
+* [News for Sentiment Analysis](https://finviz.com/)
 
 ## Government Open Information Platform Related Links (Taiwan)
 
