@@ -56,7 +56,7 @@ while stop == 0:
         row.append(SYM)
         IND=find_industry(SYM)
         row.append(IND)
-        #FFind qualified stock
+        #Identify qualified stock
         if IND in Bio and cc >= 20:
             print('\033[31m'+str(row)+"達標")
             for j in range (0,5):
@@ -69,8 +69,8 @@ while stop == 0:
             print('\033[0m'+str(row))
             
         row=[]
-        time.sleep(3)
     print("--------------------------------------")
-    if datetime.now(timezone('US/Eastern')).strftime('%Y-%m-%d %H:%M') > datetime.now(timezone('US/Eastern')).strftime('%Y-%m-%d 16:00'):
+    #Close before 4PM
+    if datetime.now(timezone('US/Eastern')).strftime('%Y-%m-%d %H:%M') > datetime.now(timezone('US/Eastern')).strftime('%Y-%m-%d 16:00'): 
         stop = 1
     time.sleep(5)
