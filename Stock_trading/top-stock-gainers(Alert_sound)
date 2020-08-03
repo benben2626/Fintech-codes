@@ -1,0 +1,76 @@
+from urllib.request import urlopen, Request
+from bs4 import BeautifulSoup
+import os
+import pandas as pd
+import winsound
+import time
+from datetime import datetime
+from pytz import timezone
+import robin_stocks as r
+import re
+
+#Robinhood
+r.login("zxc842626@gmail.com","@Ab19950302")
+#my_stocks = r.build_holdings()
+
+#Get_symbol_from_Investing.com
+def find_symbol(company,seq):
+    gg=company.findAll("td",{"class","left bold plusIconTd elp"})[seq].find("a").get("href")
+    url2="https://www.investing.com"+gg
+    req2 = Request(url=url2,headers={'user-agent': 'my-app/0.0.1'}) 
+    response2 = urlopen(req2)
+    html2 = BeautifulSoup(response2)
+    SYM=html2.find("meta",itemprop="tickerSymbol")["content"]
+    return(SYM)
+
+#Bio_industry_label
+Bio=['Biotechnology','Medical Specialties','Pharmaceuticals: Other']
+
+#Get_industry_from_Robinhood
+def find_industry(symbol):
+    inform=r.stocks.get_fundamentals(symbol, info=None)
+    industry=inform[0]['industry']
+    return(industry)
+ 
+#Main Process
+url="https://www.investing.com/equities/top-stock-gainers" #Get instant top gainers information from investing.com
+row = []
+stop=0
+while stop == 0:
+    req = Request(url=url,headers={'user-agent': 'my-app/0.0.1'}) 
+    response = urlopen(req)
+    html = BeautifulSoup(response)
+    print(datetime.now(timezone('US/Eastern')).strftime('%Y-%m-%d %H:%M')) #Time
+    for i in range (0,12):
+        SYM=find_symbol(html,i) #Find symbol
+        OPEN=float(r.stocks.get_fundamentals(SYM, info=None)[0]['open']) #Get open price
+        ID=html.findAll("span",{"class","alertBellGrayPlus js-plus-icon genToolTip oneliner"})[i]["data-id"] #Get stock data id
+        LAST=float(html.find("td",{"class","align_right pid-"+ID+"-last"}).get_text()) #Lastest price
+        #if price lower than open, jump.
+        if LAST < OPEN:
+            continue
+        NAME=html.findAll("td",{"class","left bold plusIconTd elp"})[i].get_text() #companies_name
+        row.append(NAME)
+        cc=float(html.find("td",{"class","bold greenFont pid-"+ID+"-pcp"}).get_text()[1:6]) #change%
+        row.append(str(cc)+"%")
+        row.append(SYM)
+        IND=find_industry(SYM)
+        row.append(IND)
+        #FFind qualified stock
+        if IND in Bio and cc >= 20:
+            print('\033[31m'+str(row)+"達標")
+            for j in range (0,5):
+                winsound.Beep(700,700)
+        elif cc >= 60:
+            print('\033[31m'+str(row)+"達標")
+            for j in range (0,5):
+                winsound.Beep(700,700)
+        else:
+            print('\033[0m'+str(row))
+            
+        row=[]
+        time.sleep(3)
+    print("--------------------------------------")
+    if datetime.now(timezone('US/Eastern')).strftime('%Y-%m-%d %H:%M') > datetime.now(timezone('US/Eastern')).strftime('%Y-%m-%d 16:00'):
+        stop = 1
+    time.sleep(5)
