@@ -15,6 +15,7 @@ Data are mostly presented by dataframe
 
 * [Stock data - Yahoo Finance](https://finance.yahoo.com/)
 * [News for Sentiment Analysis](https://finviz.com/)
+* [Top Gainer](https://www.investing.com/equities/top-stock-gainers)
 
 ## Government Open Information Platform Related Links (Taiwan)
 
