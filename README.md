@@ -33,7 +33,7 @@ Data are mostly presented by dataframe
 
 ## Securities Counter Trading Center (Taiwan)
 
-* [Inquiry System for Daily Reports of Securities Dealing by Securities Dealers]
+* [Inquiry System for Daily Reports of Securities Dealing by Securities Dealers] (https://www.twse.com.tw/zh/)
 
 ## Database (Taiwan)
 
