@@ -31,46 +31,57 @@ def find_industry(symbol):
     inform=r.stocks.get_fundamentals(symbol, info=None)
     industry=inform[0]['industry']
     return(industry)
- 
-#Main Process
+
 url="https://www.investing.com/equities/top-stock-gainers" #Get instant top gainers information from investing.com
 row = []
 stop=0
+
+#Main Process
+
+d = {}
+sb = {}
 while stop == 0:
     req = Request(url=url,headers={'user-agent': 'my-app/0.0.1'}) 
     response = urlopen(req)
     html = BeautifulSoup(response)
-    print(datetime.now(timezone('US/Eastern')).strftime('%Y-%m-%d %H:%M')) #Time
-    for i in range (0,12):
-        SYM=find_symbol(html,i) #Find symbol
-        OPEN=float(r.stocks.get_fundamentals(SYM, info=None)[0]['open']) #Get open price
-        ID=html.findAll("span",{"class","alertBellGrayPlus js-plus-icon genToolTip oneliner"})[i]["data-id"] #Get stock data id
-        LAST=float(html.find("td",{"class","align_right pid-"+ID+"-last"}).get_text()) #Lastest price
-        #if price lower than open, jump.
+    print(datetime.now(timezone('US/Eastern')).strftime('%Y-%m-%d %H:%M'))#Time
+    for i in range (0,30):
+        s=0
+        NAME=html.findAll("td",{"class","left bold plusIconTd elp"})[i].get_text()#companies_name
+        if NAME not in sb:
+            SYM=find_symbol(html,i)
+            sb[NAME]=SYM         
+        try:
+            OPEN=float(r.stocks.get_fundamentals(sb[NAME], info=None)[0]['open'])#Get open price
+            HIGH=float(r.stocks.get_fundamentals(sb[NAME], info=None)[0]['high'])#Get stock data id
+            PCLOSE=float(r.stocks.get_quotes(sb[NAME], info=None)[0]['previous_close'])#Lastest price
+        except:
+            continue
+        ID=html.findAll("span",{"class","alertBellGrayPlus js-plus-icon genToolTip oneliner"})[i]["data-id"]
+        LAST=float(html.find("td",{"class","align_right pid-"+ID+"-last"}).get_text())
         if LAST < OPEN:
             continue
-        NAME=html.findAll("td",{"class","left bold plusIconTd elp"})[i].get_text() #companies_name
         row.append(NAME)
-        cc=float(html.find("td",{"class","bold greenFont pid-"+ID+"-pcp"}).get_text()[1:6]) #change%
+        cc=float(html.find("td",{"class","bold greenFont pid-"+ID+"-pcp"}).get_text()[1:5])#change%
         row.append(str(cc)+"%")
-        row.append(SYM)
-        IND=find_industry(SYM)
-        row.append(IND)
-        #Identify qualified stock
-        if IND in Bio and cc >= 20:
-            print('\033[31m'+str(row)+"達標")
-            for j in range (0,5):
-                winsound.Beep(700,700)
-        elif cc >= 60:
+        row.append(sb[NAME])
+        #IND=find_industry(SYM)
+        #row.append(IND)
+        if SYM not in d:
+            d[SYM]=cc
+        elif cc>d[SYM]:
+            d[SYM]=cc
+            s=1
+        if LAST > OPEN and LAST > PCLOSE*1.1 and s==1:
             print('\033[31m'+str(row)+"達標")
             for j in range (0,5):
                 winsound.Beep(700,700)
         else:
             print('\033[0m'+str(row))
-            
         row=[]
     print("--------------------------------------")
-    #Close before 4PM
-    if datetime.now(timezone('US/Eastern')).strftime('%Y-%m-%d %H:%M') > datetime.now(timezone('US/Eastern')).strftime('%Y-%m-%d 16:00'): 
-        stop = 1
-    time.sleep(5)
+    #if datetime.now(timezone('US/Eastern')).strftime('%Y-%m-%d %H:%M') > datetime.now(timezone('US/Eastern')).strftime('%Y-%m-%d 16:00'):
+        #stop = 1
+    #time.sleep()
+
+
