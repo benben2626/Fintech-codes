@@ -10,7 +10,7 @@ import robin_stocks as r
 import re
 
 #Robinhood
-r.login("zxc842626@gmail.com","@Ab19950302")
+r.login("email","password")
 #my_stocks = r.build_holdings()
 
 #Get_symbol_from_Investing.com
