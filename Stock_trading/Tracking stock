@@ -1,0 +1,18 @@
+import robin_stocks as r
+import winsound
+import time
+r.login("email","password")
+Buy = {}
+# Buy["TSLA"]=1500 setting your stock inventory been tracking
+i=0
+while i == 0:
+    row=[]
+    TSLA=float(r.stocks.get_latest_price("TSLA", includeExtendedHours=True)[0])
+    row.append("Hold:"+str(Buy["TSLA"]))
+    row.append("Now:"+str(TSLA))
+    CHG=((TSLA-Buy["TSLA"])/Buy["TSLA"])*100
+    row.append(str(CHG)+"%")
+    print(row)
+    if TSLA<1486:
+            winsound.Beep(700,700)
+    time.sleep(3)        
