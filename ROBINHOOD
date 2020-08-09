@@ -1,0 +1,7 @@
+import robin_stocks as r
+r.login("Email","Password")
+
+#Delete all in Watchlist
+for i in range (0,len(r.account.get_watchlist_by_name(name="My First List", info=None)["results"])):
+    DDLETE=r.account.get_watchlist_by_name(name="My First List", info=None)["results"][i]["symbol"]
+    r.account.delete_symbols_from_watchlist(DDLETE, name='Default')
