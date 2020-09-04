@@ -1,0 +1,42 @@
+#Stick all text in sign up file
+from datetime import date
+
+today = date.today()
+
+#Portfolio
+PF=['GE','KO','TSM','BAC','NIO','DIS','RVLV','MRNA','TDOC',
+        'JPM','HON','XOM','SPCE','GOOG','BA','BRK.B','LMT','IRDM',
+        'AJRD','CTRN','CVX','NVDA','EADSY','AYX','XPEV','T','ARKQ']
+        
+PP=r.account.build_holdings(with_dividends=False)
+
+STOCK=[]
+LIST=[]
+for i in range(0,len(PF)):
+    STOCK=[]
+    STOCK.append(PF[i])
+    STOCK.append(float(PP[PF[i]]['quantity']))
+    STOCK.append(float(PP[PF[i]]['average_buy_price']))
+    STOCK.append(float(PP[PF[i]]['price']))
+    STOCK.append(float(PP[PF[i]]['percent_change'])/100)
+    OP=float(r.stocks.get_fundamentals(PF[i], info=None)[0]['open'])
+    LT=float(r.stocks.get_latest_price(PF[i], includeExtendedHours=True)[0])
+    R=(LT-OP)/OP
+    STOCK.append(R)
+    STOCK.append(float(PP[PF[i]]['equity_change']))
+    try:
+        STOCK.append(float(PP[PF[i]]['pe_ratio']))
+    except:
+        STOCK.append("NONE")
+    STOCK.append(float(PP[PF[i]]['percentage'])/100)
+    LIST.append(STOCK)
+    
+df = pd.DataFrame(LIST,columns=["Stock",'quantity','average_buy_price','price','percent_change','daily_return',
+                                'equity_change','pe_ratio','Protfolio Percentage'])
+writer = pd.ExcelWriter('C:/Users/zxc84/Robinhood/RHDATA/PF({}).xlsx'.format(today), engine='xlsxwriter')#pd寫入資料位置
+df.to_excel(writer, sheet_name='Portfolio',header=True,index=False)#創造sheet
+writer.save()
+
+#trans to %
+#'{:.2f}%'.format(R*100)
+#round((R*100),2)
