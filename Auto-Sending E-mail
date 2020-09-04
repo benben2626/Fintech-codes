@@ -1,0 +1,70 @@
+import smtplib
+import smtplib
+from email.mime.multipart import MIMEMultipart #email內容載體
+from email.mime.text import MIMEText #用於製作文字內文
+from email.mime.base import MIMEBase #用於承載附檔
+from email import encoders #用於附檔編碼
+import datetime
+import ssl
+
+today_date = datetime.date.today()
+days_to_mon = today_date.weekday()
+this_mon = today_date - datetime.timedelta(days = days_to_mon)
+last_mon = this_mon - datetime.timedelta(days = 7)
+
+#{}.format(text or list) add() into {}
+
+#寄件者使用的Gmail帳戶資訊
+gmail_user = 'account' #Enter your account
+gmail_password = 'password' #Enter your password
+from_address = gmail_user
+  
+#設定信件內容與收件人資訊
+to_address = ['xxxxxx@xxxmail.com', 'xxxxxx@xxxmail.com']  #Support over two email
+Subject = "Here is the Weekly Report ({})".format(last_mon)
+contents = """
+Hi my friend,
+Attached please find the Weekly Play Report you requested.
+
+Feel free to reach me if you guys have any suggestion.
+
+Regards,
+Angela
+""".format()
+
+# 設定附件（可設多個）
+attachments = ['Watchlist.xlsx']
+
+#開始組合信件內容
+mail = MIMEMultipart()
+mail['From'] = from_address
+mail['To'] = ', '.join(to_address)
+mail['Subject'] = Subject
+#將信件內文加到email中
+mail.attach(MIMEText(contents))     
+#將附加檔案們加到email中   
+for file in attachments:
+    with open(file, 'rb') as fp:
+        add_file = MIMEBase('application', "octet-stream")
+        add_file.set_payload(fp.read())
+    encoders.encode_base64(add_file)
+    add_file.add_header('Content-Disposition', 'attachment', filename='Watchlist.xlsx')
+    mail.attach(add_file)
+ 
+
+# 設定smtp伺服器並寄發信件    
+smtpserver = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+smtpserver.ehlo()
+smtpserver.login(gmail_user, gmail_password)
+smtpserver.sendmail(from_address, to_address, mail.as_string())
+smtpserver.quit()
+
+if status=={}:
+    print("郵件傳送成功!")
+else:
+    print("郵件傳送失敗!")
+smtp.quit()
+
+# Reference & Special thanks to:
+# https://lcycblog.wordpress.com/2018/09/10/python-gmail-%E5%AF%84%E4%BF%A1-with-%E9%99%84%E5%8A%A0%E5%A4%9A%E5%80%8B%E6%AA%94%E6%A1%88/
+
