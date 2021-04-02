@@ -2,20 +2,22 @@ import os.path
 import requests
 from datetime import date
 
-Code=["ARKF","ARKG","ARKK","ARKQ","ARKW"]
+Code=["ARKF","ARKG","ARKK","ARKQ","ARKW","ARKX"]
 
 HTTP=["https://ark-funds.com/wp-content/fundsiteliterature/csv/ARK_FINTECH_INNOVATION_ETF_ARKF_HOLDINGS.csv",
       "https://ark-funds.com/wp-content/fundsiteliterature/csv/ARK_GENOMIC_REVOLUTION_MULTISECTOR_ETF_ARKG_HOLDINGS.csv",
       "https://ark-funds.com/wp-content/fundsiteliterature/csv/ARK_INNOVATION_ETF_ARKK_HOLDINGS.csv",
       "https://ark-funds.com/wp-content/fundsiteliterature/csv/ARK_AUTONOMOUS_TECHNOLOGY_&_ROBOTICS_ETF_ARKQ_HOLDINGS.csv",
-      "https://ark-funds.com/wp-content/fundsiteliterature/csv/ARK_NEXT_GENERATION_INTERNET_ETF_ARKW_HOLDINGS.csv"]
+      "https://ark-funds.com/wp-content/fundsiteliterature/csv/ARK_NEXT_GENERATION_INTERNET_ETF_ARKW_HOLDINGS.csv",
+      "https://ark-funds.com/wp-content/fundsiteliterature/csv/ARK_SPACE_EXPLORATION_&_INNOVATION_ETF_ARKX_HOLDINGS.csv"]
 #ARK website --->  https://ark-funds.com/
-for i in range(0,4):
+for i in range(0,6):
     save_path = 'C:/Users/zxc84/OneDrive/桌面/ARK_Invest/'+Code[i] #Saving location
     today = date.today()
     d1 = today.strftime("%m%d")
     LCT = os.path.join(save_path, Code[i]+d1+".csv")
-    req = requests.get(HTTP[i])
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+    req = requests.get(HTTP[i],headers=headers)
     url_content = req.content
     csv_file = open(LCT, 'wb')
 
