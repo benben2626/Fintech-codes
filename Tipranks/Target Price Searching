@@ -1,0 +1,21 @@
+from urllib.request import urlopen, Request
+from bs4 import BeautifulSoup
+i=0
+while(i==0):
+    Stock=input()
+    ifo="https://www.tipranks.com/stocks/"+Stock+"/forecast"
+    try:
+        req = Request(url=ifo,headers={'user-agent': 'my-app/0.0.1'}) 
+        response = urlopen(req) 
+        html = BeautifulSoup(response)
+        Last=html.find("span",{"class","fontSize5 fonth4_bold lineHeight1 mb2 mr2 transitioncolor"}).get_text()
+        Target=html.find("div",{"class","flexccc mt3 displayflex colorpale shrink0 lineHeight2 fontSize2 ml2 ipad_fontSize3"}).get_text()
+        RK=Stock+" price:"+Last+" Target:"+Target
+        print(RK)
+    except:
+        print("I can't find this stock.")
+    R=input("Search again? [Y/N]")
+    if R == "Y" or R =="y":
+        pass
+    else:
+        i=1
