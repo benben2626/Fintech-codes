@@ -1,0 +1,23 @@
+LT=["A","B"]   #(LT=List, Adding holding stocks into the List)
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+from urllib.request import urlopen, Request
+from bs4 import BeautifulSoup
+for i in range(len(LT)):
+    Stock=LT[i]
+    ifo="https://www.tipranks.com/stocks/"+Stock+"/forecast"
+    try:
+        req = Request(url=ifo,headers={'user-agent': 'my-app/0.0.1'}) 
+        response = urlopen(req) 
+        html = BeautifulSoup(response)
+        Last=html.find("span",{"class","fontSize5 fonth4_bold lineHeight1 mb2 mr2 transitioncolor"}).get_text()
+        try:
+            Target=html.find("div",{"class","flexccc mt3 displayflex colorpale shrink0 lineHeight2 fontSize2 ml2 ipad_fontSize3"}).get_text()
+        except:
+            Target=html.find("div",{"class","flexccc mt3 displayflex colorpurple-dark shrink0 lineHeight2 fontSize2 ml2 ipad_fontSize3"}).get_text()
+        RK=Stock+" price:"+Last+" Target:"+Target
+        print(RK)
+    except:
+        print("NO "+Stock)
