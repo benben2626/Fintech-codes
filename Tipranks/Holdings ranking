@@ -1,4 +1,11 @@
-LT=["A","B"]   #(LT=List, Adding holding stocks into the List)
+import robin_stocks as rs
+rs.login(username="",
+         password="",
+         expiresIn=86400,
+         by_sms=True)
+HO=rs.build_holdings(with_dividends=False)
+LT=list(HO) #(LT=List, Adding holding stocks into the List)
+#LT=["A","B"]   
 
 
 --------------------------------------------------------------------------------------------------------------------------------------------------------
